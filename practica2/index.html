@@ -7,6 +7,8 @@
 	<!--Link necesario para el css de bootstrap-->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
 	<!--Etiqueta meta necesaria para un diseño responsive en bootstrap-->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta lang="es">
@@ -17,8 +19,8 @@
 <body>
 
 	<header class="container bg-secondary py-5">
-		<h1 class="display-1 text-info">TrapStore</h1>
-		<p class="lead text-info">Bienvenido a la pagina web más actualizada sobre el mundo del trap</p>
+		<h1 class="display-1 text-info text-center">TrapStore</h1>
+		<p class="lead text-info text-center">Bienvenido a la pagina web más actualizada sobre el mundo del trap</p>
 	</header>
 
 	<nav class="container py-5">
@@ -34,7 +36,7 @@
 				<a class="nav-link text-info" href="#albums">Albums mejor valorados</a>
 			</li>
 			<li class= "nav-item">
-				<a class="nav-link text-info" href="#suscripcion">Suscribete a nuestra web</a>
+				<a class="nav-link text-info" href="#suscripcion">Suscribete a nuestra revista</a>
 			</li>
 
 		</ul>
@@ -50,7 +52,8 @@
 		<div class="d-flex justify-content-center">  <!--d-flex es como activar display flex-->
 			<div class="embed-responsive embed-responsive-16by9">
 
-				<iframe width="560" height="315" src="https://www.youtube.com/embed/6Bj1kauH3cg">
+				<iframe class=" rounded border border-3 border-info" width="420" height="315" src="https://www.youtube.com/embed/nMD4eg5VKkE?autoplay=1&mute=1" >
+			    </iframe>
 					
 				</iframe>
 			</div>
@@ -70,7 +73,7 @@
 
 		 <br>
 
-	 	 <img src="https://static.hollywoodreporter.com/wp-content/uploads/2020/09/GettyImages-1157876425-H-2020-1601394443-928x523.jpg" class= " rounded col-4 float-end mb-3 ms-3"alt="Da baby">	
+	 	 <img src="https://static.hollywoodreporter.com/wp-content/uploads/2020/09/GettyImages-1157876425-H-2020-1601394443-928x523.jpg" class= "rounded col-4 float-end mb-3 ms-3 border border-3 border-info"alt="Da baby">	
 
 		 <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 		 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -100,11 +103,12 @@
 	<br class="h1">
 
 	<div class="container">
+		<a name="albums"></a>>
  		 <div class="row">
- 		 	<h1 class="display-4 text-info d-flex justify-content-center" ">TRAPSTORE</h1>
+ 		 	<h1 class="display-4 text-info d-flex justify-content-center" ">Albums</h1>
   		</div>
   		<div class="row">
-		    <div class="col-8">
+		    <div class="col-6">
 		    	<h2> Mejores albums: </h2>
 		    	<table class="table">
 					<thead>
@@ -148,59 +152,35 @@
 					</tbody>
 				</table>
 		    </div>
-		    <div class="col">
+		    <div class="col-6">
 		    
-				    <div class="container">
-				    	<!--d-block sirve para activar el display block y el w-100 indica el % de width respecto al parent (lo mismo h)-->
-				      <img class="w-100 rounded" src="https://images-na.ssl-images-amazon.com/images/I/81EYtj8oi3L._SL1500_.jpg" alt="First slide">
-				    </div>
-		    </div>
+				 <img class="d-block w-50 m-auto"src="https://images-na.ssl-images-amazon.com/images/I/81ePfUNCxxL._SL1500_.jpg">
+			
 	  </div>
 	</div>
 
-	<div>
+	<div class="container py-5">
 		
 		<a name="suscripcion"></a>
-		<h2> Formulario</h2>
+		<h2 class="display-4 text-center text-info"> Formulario</h2>
+	
+		<a type="button" class="d-block btn btn-outline-info btn-lg btn-block mt-5" href="formulario.html">Me quiero apuntar a la Revista!</a>
 
-		<form class="form-group" action="/action_page.php">
-		  <fieldset>
-		    <legend>Apuntate a nuestra revista</legend>
-		    <label for="fname">First name:</label><br>
-		    <input type="text" id="fname" name="fname" value="John"><br>
-		    <label for="lname">Last name:</label><br>
-		    <input type="text" id="lname" name="lname" value="Doe"><br><br>
-		    <label for="mail">Mail address:</label><br>
-		    <input type="text" id="email" name="email" value="DoeJohn@gmail.com"><br><br>
-		    <input type="submit" value="Submit">
-		  </fieldset>
-		</form>
 	</div>
-	<footer>
-		
-		<p>Pagina creada por Álvaro Prado Moreno</p>
+
+	<footer class="container bg-secondary py-5">
+
+		<div class="container rounded border border-3 border-info col-6 d-flex justify-content-center">
+			<p class="lead text-info">Pagina creada por Álvaro Prado Moreno</p>
+		</div>
 
 	</footer>
 
+
 </body>
+
+
 </html>
 
 
-<!--APUNTES-->
 
-	<!--En bootstrap despues de la class:
-	Where property is one of:
-
-	m - for classes that set margin
-	p - for classes that set padding
-	Where sides is one of:
-
-	t - for classes that set margin-top or padding-top
-	b - for classes that set margin-bottom or padding-bottom
-	l - for classes that set margin-left or padding-left
-	r - for classes that set margin-right or padding-right
-	x - for classes that set both *-left and *-right
-	y - for classes that set both *-top and *-bottom
-	blank - for classes that set a margin or padding on all 4 sides of the element-->
-
-	<!--py es el padding y bg el background color-->

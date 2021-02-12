@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Trapstore-form</title>
+
+	<!--Link necesario para el css de bootstrap-->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+	<!--Etiqueta meta necesaria para un diseño responsive en bootstrap-->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta lang="es">
+	<meta name="Description" content="Form para practica 2">
+	<meta charset="utf-8">
+
+</head>
+<body>
+
+	<header class="container bg-secondary py-5">
+		<h1 class="display-1 text-info text-center">TrapStore</h1>
+		<p class="lead text-info text-center">Bienvenido a la pagina web más actualizada sobre el mundo del trap</p>
+	</header>
+
+
+	<nav class="container py-5">
+
+		<ul class="nav justify-content-center bg-secondary m-1">
+			<li class= "nav-item ">
+				<a class="nav-link text-info" href="index.html#musica">Musica</a>
+			</li>
+			<li class= "nav-item">
+				<a class="nav-link text-info" href="index.html#artista">Artista del mes</a>
+			</li class= "nav-item">
+			<li class= "nav-item">
+				<a class="nav-link text-info" href="index.html#albums">Albums mejor valorados</a>
+			</li>
+			<li class= "nav-item">
+				<a class="nav-link text-info" href="index.html#suscripcion">Suscribete a nuestra revista</a>
+			</li>
+
+		</ul>
+	</nav>
+
+
+	<div class="container mb-5">
+
+		<div>
+			<h2 class="display-4 text-center text-info"> Formulario</h2>
+		</div>
+
+
+		<form>
+			<!--Aqui se podrian meter REDEX para aceptar ciertos formatos de mail-->
+		  <div class="form-group">
+		    <label for="email">Direccion e-mail</label>
+		    <input type="email" class="form-control" id="email-input" placeholder="nombre@gmail.com">
+		  </div>
+
+		  <div class="form-group">
+		    <label for="suscripcion">Elige el numero de meses que quieres que dure tu suscripcion</label>
+		    <select class="form-control" id="suscripcion-input">
+		      <option>1 mes</option>
+		      <option>2 meses</option>
+		      <option>3 meses</option>
+		      <option>4 meses</option>
+		      <option>5 meses</option>
+		    </select>
+		  </div>
+
+
+		  <div class="form-group">
+		    <label for="feedback">Cuentanos qué te parece la web</label>
+		    <textarea class="form-control" id="feedback-input" rows="3"></textarea>
+		  </div>
+
+		  <div class="form-group">
+		  	<a type="button" class="d-block btn btn-outline-info btn-lg btn-block mt-5">Enviar</a>
+		  </div>
+		</form>
+
+	</div>
+
+
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+	<div class="container col-6 py-5" >
+		<div class="container py-5">
+			
+			<h1 class="display-4 text-info d-flex justify-content-center">Portadas de albums</h1>
+		</div>
+
+		<div class="container py-5" style="width: 400px">
+			<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+			  <div class="carousel-indicators">
+			    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+			    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+			    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+			  </div>
+			  <div class="carousel-inner">
+			    <div class="carousel-item active">
+			      <img src="https://images-na.ssl-images-amazon.com/images/I/614UiJzoxPL._SX425_.jpg" class="d-block w-100" alt="hola">
+			    </div>
+			    <div class="carousel-item">
+			      <img src="https://images-na.ssl-images-amazon.com/images/I/71ofx86lXDL._SY355_.jpg" class="d-block w-100" alt="hola1">
+			    </div>
+			    <div class="carousel-item">
+			      <img src="https://discosaltafidelidad.es/wp-content/uploads/2020/08/Kendrick-Lamar-Good-Kid-MAAd-City.jpg" class="d-block w-100" alt="hola2">
+			    </div>
+			  </div>
+			  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"  data-bs-slide="prev">
+			    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			    <span class="visually-hidden">Previous</span>
+			  </button>
+			  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"  data-bs-slide="next">
+			    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			    <span class="visually-hidden">Next</span>
+			  </button>
+			</div>
+		</div>
+	</div>
+
+
+
+	<footer class="container bg-secondary py-5">
+
+		<div class="container rounded border border-3 border-info col-6 d-flex justify-content-center">
+			<p class="lead text-info">Pagina creada por Álvaro Prado Moreno</p>
+		</div>
+
+	</footer>
+
+
+
+</body>
+</html>
