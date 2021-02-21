@@ -47,7 +47,7 @@
 		</div>
 
 		<div class="row">
-			<form>
+			<form id="form">
 				<fieldset>
 				  <div class="form-group">
 				    <label for="idUser">Indica el ID de usuario</label>
@@ -63,7 +63,11 @@
 				  <div class="form-group">
 				    <label for="userName">Indica tu nombre de usuario</label>
 					<input class="form-control" id="userName" type="text" minlength="5" required title="Por favor el nombre de usuario tiene que tener entre un mínimo de 5 caracteres e incluir números">
+				  </div>
 
+				   <div class="form-group">
+				    <label for="idUser">Indica la contraseña:</label>
+				    <input class="form-control" id="password" placeholder="Contraseña" type="password" required>
 				  </div>
 
 				  <div class="form-group">
@@ -157,7 +161,23 @@
 	</footer>
 
 	<script type="text/javascript">
-		
+	
+
+		//Me creo un generator de ID
+
+		function* generadorID(){
+			let i=11;
+
+			while(true){
+				yield i++;
+			}
+		}		
+
+		//guardo la referencia
+
+		var idGenerator= generadorID();
+
+
 		//validacion con JS (Cambiamos el mensaje que se da al usuario)
 
 		function hasNumber(myString) {
@@ -165,8 +185,9 @@
 		}
 
 		var userName= document.getElementById("userName");
-		var name= document.getElementById("name");
+		var fullName= document.getElementById("name");
 		var idUser=document.getElementById("idUser");
+		var password=document.getElementById("password");
 		var email=document.getElementById("email");
 
 		userName.addEventListener("change", function(event){
@@ -178,7 +199,57 @@
 		});
 
 
+		//manejo el submit del form
 
+		var formulario=document.getElementById("form");
+		var newUser={};
+		var respuesta={};
+
+		formulario.addEventListener("submit", function(event){
+
+			//Sin prevenir el default de va toda la info al traste
+
+			event.preventDefault();
+
+			newUser={
+				id:idGenerator.next().value,
+				name:fullName.value,
+				userName:userName.value,
+				password:password.value,
+				email:email.value
+
+			};
+		
+
+
+			fetch("https://6032e026a223790017acf78a.mockapi.io/api/v1/Users",{
+				method: "POST",
+				body: JSON.stringify(newUser),
+
+				headers:{
+					"Content-Type": "application/json",
+	      			"Accept": "application/json"
+				}
+			})
+
+			.then(function(response){
+				if(response.ok){
+					//si todo bien se devuelve el valor en formato jason
+					return response.json();
+				}else{
+					throw response;
+				}
+			})
+
+			.then(function(res){
+
+				respuesta=res;
+			})
+
+			.catch(errorMessage=> console.log(errorMessage));
+
+			
+		});
 
 	</script>
 

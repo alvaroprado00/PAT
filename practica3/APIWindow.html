@@ -101,7 +101,7 @@
 
 var vectorRespuesta=[]; //aqui guardo toda la info
 
-fetch("https://jsonplaceholder.typicode.com/users")
+fetch("https://6032e026a223790017acf78a.mockapi.io/api/v1/Users")
 
 //me suscribo a la promise response
 .then(function(response){
@@ -148,7 +148,7 @@ function creadorContenido(numUsuariosAMostrar){
 						`<th scope="row"> Usuario ${i}</th>`+
 						`<td>${vectorRespuesta[i].id}</td>`+
 						`<td>${vectorRespuesta[i].name}</td>`+
-						`<td>${vectorRespuesta[i].username}</td>`+
+						`<td>${vectorRespuesta[i].userName}</td>`+
 						`<td>${vectorRespuesta[i].email}</td>`+
 						"</tr>";
 	}
