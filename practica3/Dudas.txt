@@ -1,0 +1,37 @@
+Dudas
+=====
+
+Puedo pasarme todo el script a un .js aparte sin que importen los nombres de ids
+
+	Sí, no importan los ids lo entiende
+
+Nos vale con saber hacer HTTP requests con fetch o tenemos que saber la otra manera
+
+	Vale con saber hacer una request con HTTP
+
+Cuando uso etiquetas HTMl de validación VS validacion por JS?
+
+	El .Validity es una API de JS que nos permite dar mensajes personalizados sobre campos en un form
+
+
+En fetch cuando haces POST que quieren decir los atributos del header
+	
+	Lo he indicado en el codigo
+
+
+Como hago para que los ID de los objetos que guardo sean coherentes
+
+	Se encarga el back
+
+En cuanto a la suscripcion a un evento => me vale saber hacerlo con addEventListener?
+
+	SÍ
+
+
+Apuntes
+=======
+
+con el atributo del tag display
+
+display none=> te oculta la etiqueta
+display block=> te muestra el contenido

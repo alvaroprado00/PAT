@@ -12,6 +12,7 @@
 	<meta lang="es">
 	<meta name="Description" content="formulario+carousel">
 	<meta charset="utf-8">
+	<script type="text/javascript" src="formulario.js"></script>
 
 </head>
 <body>
@@ -29,7 +30,7 @@
 				<a class="nav-link text-info" href="index.html">Principal</a>
 			</li>
 			<li class= "nav-item">
-				<a class="nav-link text-info" href="formulario.html">Formulario</a>
+				<a class="nav-link text-info" href="formulario.html">Registrarse</a>
 			</li class= "nav-item">
 			<li class= "nav-item">
 				<a class="nav-link text-info" href="APIWindow.html">Info de API rest</a>
@@ -43,17 +44,16 @@
 		<a name="formulario">
 
 		<div class="row">
-			<h2 class="display-4 text-center text-info"> Formulario</h2>
+			<h2 class="display-4 text-center text-info"> Registrarse</h2>
+		</div>
+
+		<div class="row">
+			<p class="lead text-center"> Si quieres formar parte de nuestra web, rellena el formulario</p>
 		</div>
 
 		<div class="row">
 			<form id="form">
 				<fieldset>
-				  <div class="form-group">
-				    <label for="idUser">Indica el ID de usuario</label>
-				    <!--Con HTML conseguimos que no deje hacer submit si no cumple que es un numero entre 0 y 9-->
-				    <input class="form-control" id="idUser" placeholder="Numero de ID" type="number" min="0" max="9" required>
-				  </div>
 
 				  <div class="form-group">
 				    <label for="name">Indica tu nombre completo</label>
@@ -62,7 +62,7 @@
 
 				  <div class="form-group">
 				    <label for="userName">Indica tu nombre de usuario</label>
-					<input class="form-control" id="userName" type="text" minlength="5" required title="Por favor el nombre de usuario tiene que tener entre un mínimo de 5 caracteres e incluir números">
+					<input class="form-control" id="userName" type="text" minlength="5" required title="Por favor el nombre de usuario tiene que tener un mínimo de 5 caracteres e incluir números">
 				  </div>
 
 				   <div class="form-group">
@@ -89,6 +89,7 @@
 	</div>
 
 
+	<!--Script para el carrousel-->
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 
@@ -150,8 +151,6 @@
 	</div>
 
 
-
-
 	<footer class="container bg-secondary py-5">
 
 		<div class="container rounded border border-3 border-info col-6 d-flex justify-content-center">
@@ -160,98 +159,11 @@
 
 	</footer>
 
-	<script type="text/javascript">
-	
 
-		//Me creo un generator de ID
+	<!--Script externo para manejar el submit del form-->
 
-		function* generadorID(){
-			let i=11;
+	<script type="text/javascript" src="formulario.js"></script>
 
-			while(true){
-				yield i++;
-			}
-		}		
-
-		//guardo la referencia
-
-		var idGenerator= generadorID();
-
-
-		//validacion con JS (Cambiamos el mensaje que se da al usuario)
-
-		function hasNumber(myString) {
-		  return /\d/.test(myString);
-		}
-
-		var userName= document.getElementById("userName");
-		var fullName= document.getElementById("name");
-		var idUser=document.getElementById("idUser");
-		var password=document.getElementById("password");
-		var email=document.getElementById("email");
-
-		userName.addEventListener("change", function(event){
-			if((userName.validity.tooShort) && (!hasNumber(userName))){
-				userName.setCustomValidity("El nombre de usuario debe tener mas de 5 caracteres y numeros");
-			}else{
-				userName.setCustomValidity("");
-			}
-		});
-
-
-		//manejo el submit del form
-
-		var formulario=document.getElementById("form");
-		var newUser={};
-		var respuesta={};
-
-		formulario.addEventListener("submit", function(event){
-
-			//Sin prevenir el default de va toda la info al traste
-
-			event.preventDefault();
-
-			newUser={
-				id:idGenerator.next().value,
-				name:fullName.value,
-				userName:userName.value,
-				password:password.value,
-				email:email.value
-
-			};
-		
-
-
-			fetch("https://6032e026a223790017acf78a.mockapi.io/api/v1/Users",{
-				method: "POST",
-				body: JSON.stringify(newUser),
-
-				headers:{
-					"Content-Type": "application/json",
-	      			"Accept": "application/json"
-				}
-			})
-
-			.then(function(response){
-				if(response.ok){
-					//si todo bien se devuelve el valor en formato jason
-					return response.json();
-				}else{
-					throw response;
-				}
-			})
-
-			.then(function(res){
-
-				respuesta=res;
-			})
-
-			.catch(errorMessage=> console.log(errorMessage));
-
-			
-		});
-
-	</script>
 
 </body>
 </html>
