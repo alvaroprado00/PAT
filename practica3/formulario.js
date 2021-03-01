@@ -17,6 +17,7 @@ function hasSpace (myString) {
    return /\s/.test(myString);
 }
 
+
 var userName= document.getElementById("userName");
 var fullName= document.getElementById("name");
 var password=document.getElementById("password");
@@ -38,7 +39,6 @@ userName.addEventListener("input", function(event){
 	}
 });
 
-
 //manejo el submit del form
 
 var formulario=document.getElementById("form");
@@ -50,6 +50,7 @@ formulario.addEventListener("submit", function(event){
 	//Sin prevenir el default de va toda la info al traste
 
 	event.preventDefault();
+
 
 	newUser={
 		//id:idGenerator.next().value, no hace falta me lo asigna la API
@@ -92,10 +93,11 @@ formulario.addEventListener("submit", function(event){
 
 	.catch(errorMessage=> console.log(errorMessage));
 
-	window.location.reload();
+	//window.location.reload();
 
-	if(response.ok){
+	if(hasNumber(respuesta.id)){
 		alert("Has sido de alta correctamente");
+		formulario.reset();
 	}
 	
 });
