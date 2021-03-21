@@ -20,7 +20,12 @@ public class User {
 			
 			User u= (User)o;
 			
-			if(u.getUserName().equals(this.getUserName()) && u.getPassword().equals(this.getPassword())) {
+			userName=u.getUserName().toLowerCase();
+			password=u.getPassword().toLowerCase();
+			
+			//Para evitar caseSensitive behaviours
+			
+			if(userName.equals(this.getUserName().toLowerCase()) && u.password.equals(this.getPassword().toLowerCase())) {
 				return true;
 			}else {
 				return false;
