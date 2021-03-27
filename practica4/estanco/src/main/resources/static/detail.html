@@ -144,11 +144,11 @@
 <script type="text/javascript">
 
 	//inicializo el JSON que me van a devolver del back
-	var articleSearchModel={};
+	var industrialSearchModel={};
 	
 	function getArticles(evento){
 
-		fetch("http://localHost:8080/api/articles",{
+		fetch("http://localHost:8080/api/tabacoIndustrial",{
 
 			method:"GET",
 			headers:{
@@ -169,7 +169,7 @@
 
 		.then(function (r){
 
-			articleSearchModel=r;
+			industrialSearchModel=r;
 			formGrid();
 
 		})
@@ -181,22 +181,24 @@
 	function formGrid(){
 		const myGrid= document.getElementById("tabaco-grid");
 		
-		let listArticles=articleSearchModel.items;
-		let counter= articleSearchModel.count;
+		let listCajetas=industrialSearchModel.items;
+		let counter= industrialSearchModel.count;
 
 		let html="";
 
 		for (let i=0; i<counter; i++){
 			//creacion de las cards
 
-			let article= listArticles[i];
+			let cajeta= listCajetas[i];
 
 			html+= '<div class="col">'+
 			 '<div class="card m-auto my-5" style="width: 20rem">'+
-			 `<img class="card-img-top" src="${article.imagen}" height="400" alt="Card image cap">`+
+			 `<img class="card-img-top" src="${cajeta.imagen}" height="400" alt="Card image cap">`+
 			 '<div class="card-body">'+
-			 `<h5 class="card-title">${article.marca}</h5>`+
-			 `<p class="card-text">${article.descripcion}</p>`+
+			 `<h5 class="card-title">${cajeta.marca}</h5>`+
+			 `<p class="card-text">${cajeta.descripcion}</p>`+
+			 `<p class="card-text">Precio: ${cajeta.precio}</p>`+
+			 `<p class="card-text">Cantidad: ${cajeta.cigarrillos}</p>`+
 			 '<a href="#" class="btn btn-primary">Comprar</a>'+
 			 '</div>'+
 			 '</div>'+

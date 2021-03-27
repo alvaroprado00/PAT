@@ -1,6 +1,5 @@
 package com.myProject.estanco.model;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +15,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 "count",
 "items"
 })
-public class ArticleSearchModel {
+public class TabacoIndustrialSearchModel {
 
 @JsonProperty("count")
 private Integer count;
 @JsonProperty("items")
-private List<Article> items = null;
+private List<TabacoIndustrial> items = null;
 @JsonIgnore
 private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -36,12 +35,12 @@ this.count = count;
 }
 
 @JsonProperty("items")
-public List<Article> getItems() {
+public List<TabacoIndustrial> getItems() {
 return items;
 }
 
 @JsonProperty("items")
-public void setItems(List<Article> items) {
+public void setItems(List<TabacoIndustrial> items) {
 this.items = items;
 }
 

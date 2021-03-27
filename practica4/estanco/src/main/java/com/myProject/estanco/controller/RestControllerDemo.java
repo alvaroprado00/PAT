@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myProject.estanco.model.ArticleSearchModel;
+import com.myProject.estanco.model.GIF;
+import com.myProject.estanco.model.GIFService;
+import com.myProject.estanco.model.TabacoIndustrialSearchModel;
 import com.myProject.estanco.model.User;
+import com.myProject.estanco.model.UserLogin;
 import com.myProject.estanco.service.ArticleService;
 import com.myProject.estanco.service.UserService;
 
@@ -19,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 //Indico con anotaciones que es un controller tipo REST y que va a atender las peticiones a /api
+//Indico que esta clase va usar logs (en properties tienes que indicar el nivel de prioridad)
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -32,22 +36,40 @@ public class RestControllerDemo {
 	@Autowired
 	private ArticleService articleService;
 	
+	@Autowired
+	private GIFService gifService;
+	
 	
 	
 	@PostMapping("/users/login")
-	public ResponseEntity<Boolean> checkUser(@RequestBody User user){
-		log.debug("Llego a checkUsers en el controller");
-		ResponseEntity<Boolean> response=userService.checkUser(user);
+	public ResponseEntity<User> loginUser(@RequestBody UserLogin userLogin){
+		
+		log.debug("Llego al login en el controller");
+		
+		//Check the user opcion strict significa que deben coincider password y userName
+		
+		User user=userService.checkUser(userLogin, "strict");
+		ResponseEntity<User>response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		if(user!=null) {
+			log.debug("He encontrado a: "+user.getUserName());
+			response= new ResponseEntity<>(user, HttpStatus.OK);
+		}
+			
+		//Si el usuario no esta registrado nos lo indica la cabecera con error 404
 		return response;
 	}
 	
-	@GetMapping("/articles")
-	public ResponseEntity <ArticleSearchModel> getArticles(){
+	@GetMapping("/tabacoIndustrial")
+	public ResponseEntity<TabacoIndustrialSearchModel> getTabacoIndustrial(){
 		
-		ArticleSearchModel articulos= articleService.getAllArticles();
 		
-		ResponseEntity<ArticleSearchModel> response= new ResponseEntity<>(articulos, HttpStatus.OK);
-		log.debug("vuelvo del service de articulos");
+		log.debug("Llego al controller metodo getTabacoIndustrial");
+		
+		TabacoIndustrialSearchModel industrialSearch= articleService.getTabacoIndustrialSearch();
+		
+		ResponseEntity<TabacoIndustrialSearchModel> response= new ResponseEntity<>(industrialSearch, HttpStatus.OK);
+		
 		return response;
 	}
 	
@@ -55,9 +77,34 @@ public class RestControllerDemo {
 	@PostMapping("/users/register")
 	public ResponseEntity<User> register(@RequestBody User user){
 		
-		log.debug("Metodo register del controller");
-		ResponseEntity<User> responseFromService= userService.registerUser(user);
-		return responseFromService;		
+		log.debug("Llego al register del controller");
+		ResponseEntity<User> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		User serviceResponse= userService.registerUser(user);
+		
+		if(serviceResponse!=null) {
+			//Respuesta no nula del service=> Ha sido registrado
+			response= new ResponseEntity<>(serviceResponse, HttpStatus.OK);
+		}
+		return response;		
+	}
+	
+	
+	@GetMapping("GIF")
+	public ResponseEntity<GIF> getGIF(){
+		 
+		ResponseEntity<GIF> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		GIF gif= gifService.getGIFFromMemory();
+		
+		if(gif!=null) {
+			
+			response=new ResponseEntity<>(gif, HttpStatus.OK);
+			
+		}
+		
+		return response;
+		
 	}
 
 }

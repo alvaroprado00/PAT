@@ -65,11 +65,26 @@
 			</form>
 		</div>
 
-	<div class="row mt-4">
+		<div class="row mt-4">
 
-		<a class="lead text-center link-secondary" href="register.html"> Todavía no estas registrado? Pincha aquí</a>
+			<a class="lead text-center link-secondary" href="register.html"> Todavía no estas registrado? Pincha aquí</a>
+		</div>
+
 	</div>
 
+	<div class="container">
+
+		<div class="row py-5 justify-content-center" style="display: none" id="container-hidden">
+			<p class="lead text-warning text-center">CARGANDO...</p>
+			<a name="GIF"></a>
+		</div>
+
+		<div class="row py-5 justify-content-center">
+			
+			<div class="col-6" id="contenido-dinamico">
+			
+			</div>
+		</div>
 	</div>
 
 	<footer class="container-fluid estancoColors py-5 mt-5">
@@ -84,8 +99,9 @@
 
 <script type="text/javascript">
 	
-	var habilitado=false;
-	var user={};
+	var userToSend={};
+	var gif={};
+	var userReceived={};
 
 	function loginFunction(evento){
 
@@ -94,7 +110,8 @@
 		let userName= document.getElementById("userName").value;
 		let password=document.getElementById("password").value;
 
-		user={firstName:"", lastName:"", userName:userName, password:password, email:""};
+		userToSend={userName:userName, password:password};
+
 
 		fetch("http://localHost:8080/api/users/login",{
 
@@ -104,13 +121,12 @@
 				"Accept": "application/json"
 			},
 
-			body:JSON.stringify(user)
+			body:JSON.stringify(userToSend)
 
 		})
 
 		.then(function(response){
 			if(response.ok){
-
 				return response.json();
 			}else{
 				throw response;
@@ -118,19 +134,79 @@
 		})
 
 		.then(function (r){
-
-			if(r){
-
-				alert("Bienvenido: "+userName);
-				habilitado=true;
-				window.location.replace("home.html");
-			}else{
-				alert("No existe ningun usuario: "+userName+" con esa contraseña");
-			}
+			userReceived=r;
+			getGIF();
 
 		})
 
-		.catch(error=>console.error(error))
+		.catch(function(error){
+
+			alert("No existe usuario: "+userName +" con la contraseña indicada");
+		})
+
+	}
+
+	function getGIF(){
+
+
+		fetch("http://localHost:8080/api/GIF",{
+
+			method:"GET",
+			headers:{
+				"Content-Type":"application/json",
+				"Accept":"application/json"
+			}
+		})
+
+		.then(function(response){
+
+			if(response.ok){
+				return response.json();
+			}else{
+				throw response;
+			}
+		})
+
+		.then(function(r){
+			gif=r;
+			showGIF(gif);
+		})
+
+		.catch(function(e){console.error(e)})
+	}
+
+	function storeUser(){
+		//Muy importante guardar el User como JSON si no no va
+
+		window.localStorage.setItem("activeUser",JSON.stringify(userReceived));
+		console.log("Guardando al usuario en el localStorage");
+	}
+
+	function showGIF(gif){
+		let containerForGIF=document.getElementById("contenido-dinamico");
+		let containerHidden=document.getElementById("container-hidden");
+
+		//Le quito el atributo hidden poniendole el style a vacio
+		containerHidden.style="";
+
+		containerForGIF.innerHTML="";
+		containerForGIF.innerHTML=`<img src="${gif.contenido}" class="rounded mx-auto d-block">`
+
+		//Para que vaya al GIF y no se quede arriba de la pagina 
+		window.location.href="#GIF";
+
+		//Provoco delay aposta para poder ver algo
+
+		console.log("Inicia Espera...")
+		window.setTimeout(function(){
+
+			alert("Bienvenido: "+userReceived.userName);
+			storeUser("UsuarioActivo", userReceived);
+			window.location.href="home.html";
+			console.log("Fin")
+		}, 5000);
+
+
 
 	}
 

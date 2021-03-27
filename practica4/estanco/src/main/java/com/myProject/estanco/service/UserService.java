@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,13 +24,18 @@ import com.myProject.estanco.model.*;
 public class UserService {
 	
 	
-	//con la  anotacion de @value inyecto el valor desde properties
+	//con la  anotacion de @value inyecto el valor de la URL de la API desde properties
 	@Value("${users.url}")
 	private String usersUrl;
 	
 	private List<User> listaUsuarios;
 	
-	public ResponseEntity<UserSearchModel> getAllUsers(){
+	/**
+	 * Metodo para obtener todos los usuarios registrados de mi API
+	 * @return lista de usuarios registrados
+	 */
+	
+	public List<User> getAllUsers(){
 			
 		//Llamo a mi fake Api y me cojo todos los usuarios para guardarmelos
 	
@@ -48,59 +52,104 @@ public class UserService {
 		//Al ser metodo GET el tercer parametro puede estar a null
 		final ResponseEntity<UserSearchModel> respuesta= template.exchange(usersUrl, metodoHttp, null, UserSearchModel.class);
 		
-		return respuesta;
+		return respuesta.getBody().getItems();
 	}
 	
 	
-	public ResponseEntity<Boolean> checkUser(User user) {
+	/**
+	 * Metodo para comprobar si existe un usuario ya registrado
+	 * 
+	 * @param userlogin objeto tipo userLogin con solo dos atributos: userName y password
+	 * @param type la opcion "strict" comprueba si hay un usuario con mismo userName y password. La opcion "relaxed"
+	 * comprueba si hay un usario con mismo userName unicamente
+	 * @return devuelve el usuario si existe en la lista de Usuarios y si se han indicado correctamente los parametros y si no devuelve NULL.
+	 */
+	public User checkUser(UserLogin userlogin, String type) {
 		
-		//LLamo al metodo getAllUsers del servicio
 		
-		boolean isInApi=false;
+		//Me transformo el UserLogin a User con el constructor creado para estos casos
 		
+		User user= new User(userlogin);
+		
+		User userResponse=null;
+		
+		
+		//Para evitar problema de case Sensitive
+		type=type.toLowerCase();
+			
 		for(User u: listaUsuarios) {
 			
-			if (u.equalsTo(user)) {
-				isInApi=true;
+			if (u.equalsTo(user, type)) {
+				
+				//Si el type es strict tiene que coincidir userName y password 
+				//Si el type es Relaxed solo userName
+				//Si le pasas cualquier otro type te devuelve false
+				
+				userResponse=u;
+				
 			}
 		}
 		
-		//Respondo al controller con una ResponseEntity
+		//Respondo al controller con el usuario
 
-		ResponseEntity<Boolean> respuesta= new ResponseEntity<>(isInApi, HttpStatus.OK);
-		return respuesta;
+		return userResponse;
 	}
 	
-	public ResponseEntity<User> registerUser(User user){
+	
+	/**
+	 * Metodo para registrar un nuevo usuario en la API
+	 * 
+	 * @param user Recibe un usuario completo para registrarlo
+	 * @return Te devuelve el mismo usuario si lo ha dado de alta y te devuelve un null si no le ha dado de alta porque ya 
+	 *  		existia alguien con ese nombre de usuario
+	 */
+	public User registerUser(User user){
 		
-		//Va a tratarse de un POST a la API por tanto tiene que haber headers
+		//Importante: si se quiere registrar alguien y ya hay alguien con ese nombre de usuario no le dejas
 		
-		RestTemplate template= new RestTemplate();
+		UserLogin userLoginToRegister= new UserLogin(user);
 		
-		HttpMethod metodo= HttpMethod.POST;
+		//Comprobamos si ya alguien tiene ese nombre de Usuario
+		User userChecked= this.checkUser(userLoginToRegister, "relaxed");
 		
-		//Me creo la cabecera de la peticion
-		HttpHeaders headers= new HttpHeaders();
+		User response=null;
 		
-		headers.add("Content-Type", "application/json");
-		headers.add("Accept", "application/json");
+		if(userChecked==null) {
+			
+			//Nadie tiene ese nombre de usuario asi que procedemos a hacer POST
+			
+			//Va a tratarse de un POST a la API por tanto tiene que haber headers
+			
+			RestTemplate template= new RestTemplate();
+			
+			HttpMethod method= HttpMethod.POST;
+			
+			//Me creo la cabecera de la peticion
+			HttpHeaders headers= new HttpHeaders();
+			
+			headers.add("Content-Type", "application/json");
+			headers.add("Accept", "application/json");
+			
+			//Otra manera:
+			// headers.setContentType(MediaType.JSON);
+			
+			//Seteo el body que es el usuario que me pasan
+			
+			User body = user;
+			
+			HttpEntity<User> entity = new HttpEntity<>(body, headers);
+			
+			ResponseEntity<User> responseFromAPI = template.exchange(usersUrl, method, entity, User.class);
+			
+			response=responseFromAPI.getBody();
+			
+	
+			//Ojo, que si registro un nuevo usuario, debo volver a ejecutar InicializeUsers
+			inicializeUsers();
+			
+		}
 		
-		//Otra manera:
-		// headers.setContentType(MediaType.JSON);
-		
-		//Seteo el body que es el usuario que me pasan
-		
-		User body = user;
-		
-		HttpEntity<User> entidad = new HttpEntity<>(body, headers);
-		
-		ResponseEntity<User> response = template.exchange(usersUrl, metodo, entidad, User.class);
-		
-
-		//Ojo, que si registro un nuevo usuario, debo volver a ejecutar InicializeUsers
-		inicializeUsers();
-		
-		return new ResponseEntity<User>(response.getBody(), HttpStatus.OK); 
+		return response;
 		
 	}
 
@@ -109,9 +158,8 @@ public class UserService {
 	@PostConstruct
 	public void inicializeUsers() {
 		
-		ResponseEntity<UserSearchModel> responseFromGetAllUsers= this.getAllUsers();
 		
-		listaUsuarios=responseFromGetAllUsers.getBody().getItems();
+		listaUsuarios=this.getAllUsers();
 		
 	}
 	
