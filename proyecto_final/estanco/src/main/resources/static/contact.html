@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Contact</title>
+	<meta name="Description" content="Practica 4 PAT">
+	<meta charset="utf-8">
+	<meta lang="es">
+
+	<!--Link necesario para el css de bootstrap-->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+
+	<style type="text/css">
+		
+		.estancoColors{
+			background-color: #8B0000;
+		}
+	</style>
+
+</head>
+<body>
+
+	<header class="container-fluid estancoColors py-5">
+
+		<div class="row">
+			<h1 class="display-1 text-warning text-center">ESTANCO VIRTUAL</h1>
+		</div>
+
+		<div class="row">
+			<p class="lead text-warning text-center">Bienvenido a tu estanco de confianza desde casa</p>
+		<div>
+	</header>
+
+
+	<div class="container py-5">
+
+		<div class="row">
+
+			<h3 class="display-3 text-secondary text-center">COMENTA</h3>
+			<p class="lead text-center text-secondary">Si algo no te convence de nuestra web, dejanos un comentario!</p>
+
+		</div>
+
+		<div class="row">
+
+			<form id="coment-form">
+				<fieldset>
+
+				  <div class="form-group">
+				    <label for="contentComent">Indicanos aqui tus observaciones</label>
+			 		 <textarea class="form-control" id="comentContent" rows="3"></textarea>
+				  </div>
+
+	 			 <div class="form-check">
+   					 <input type="checkbox" class="form-check-input" id="positiveComentCheck">
+    				<label class="form-check-label" for="positiveComentCheck">Estoy contento con el servicio</label>
+ 				 </div>
+
+				   <div class="form-group mt-5">
+				  	<div class="row">
+				  		<button type="submit" class="btn btn-outline-warning btn-lg btn-block" id="coment-btn">Enviar comentario</button>
+				  	</div>
+				  </div>
+
+				</fieldset>
+			</form>
+		</div>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        ...
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+	
+	<footer class="container-fluid estancoColors py-5 mt-5">
+
+		<div class="container-fluid rounded border border-2 border-warning col-6">
+			<p class="lead text-warning text-center">Derechos reservados</p>
+		</div>
+
+	</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+
+</body>
+
+<script type="text/javascript">
+	
+
+	const formulario= document.getElementById("coment-form");
+
+	formulario.addEventListener("submit", addComentFunction);
+
+	var userFromBack={};
+
+	function addComentFunction(evento){
+
+		evento.preventDefault();
+
+		let content=document.getElementById("comentContent").value;
+		let positiveExperience=document.getElementById("positiveComentCheck").value;
+		let tokenComent=makeRandomToken(5);
+
+		//Para nuestro back positive experience es un boolean
+		//Transformo valor
+		if (positiveExperience=="on"){
+			positiveExperience="true";
+		}else{
+			positiveExperience="false";
+		}
+
+		coment={token:tokenComent, content:content, positiveExperience:positiveExperience};
+
+		//Cojo la info de que user esta activo mediante el local Storage
+		let userActive= JSON.parse(localStorage.getItem("activeUser"));
+
+		//Me creo un JSON del tipo userComent(del back)
+		userToSend={userName:userActive.userName, coment:coment};
+
+		fetch("http://localHost:8080/api/users/coments",{
+
+			method:"POST",
+			headers:{
+				"Content-Type":"application/json",
+				"Accept": "application/json"
+			},
+
+			body:JSON.stringify(userToSend)
+
+		})
+
+		.then(function(response){
+			if(response.ok){
+
+				return response.json();
+			}else{
+				throw response;
+			}
+		})
+
+		.then(function (r){
+
+			console.log("comentario registrado");
+			console.log("Usuario que ha comentado con toda su info a continuacion");
+			console.info(r);
+
+			//showDinamicContent()
+			alert("Hola: "+r.firstName+" "+r.lastName+" tu comentario ha sido registrado, agradecemos tu participacion");
+		})
+
+		.catch(error=>console.error(error))
+
+	}
+
+	//Añado funcion que genera un string aleatorio con chars y numeros para generarme el ID del coment
+
+	function makeRandomToken(length) {
+	   var result           = '';
+	   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	   var charactersLength = characters.length;
+	   for ( var i = 0; i < length; i++ ) {
+	      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	   }
+
+	   
+	   return result;
+	}
+
+	function showDinamicContent(){
+		var myModal = new bootstrap.Modal(document.getElementById('myModal'), options)
+
+	}
+
+</script>
+</html>
