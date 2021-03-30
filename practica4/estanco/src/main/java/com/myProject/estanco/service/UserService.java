@@ -14,12 +14,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.myProject.estanco.exceptions.UserIDNotFoundException;
 import com.myProject.estanco.model.*;
+
+import lombok.extern.slf4j.Slf4j;
 
 
 
 //Tendra la logica de negocio de usuarios por eso es un service
-
+ @Slf4j
 @Service
 public class UserService {
 	
@@ -64,12 +67,8 @@ public class UserService {
 	 * comprueba si hay un usario con mismo userName unicamente
 	 * @return devuelve el usuario si existe en la lista de Usuarios y si se han indicado correctamente los parametros y si no devuelve NULL.
 	 */
-	public User checkUser(UserLogin userlogin, String type) {
+	public User checkUser(User userToCheck, String type) {
 		
-		
-		//Me transformo el UserLogin a User con el constructor creado para estos casos
-		
-		User user= new User(userlogin);
 		
 		User userResponse=null;
 		
@@ -79,7 +78,7 @@ public class UserService {
 			
 		for(User u: listaUsuarios) {
 			
-			if (u.equalsTo(user, type)) {
+			if (u.equalsTo(userToCheck, type)) {
 				
 				//Si el type es strict tiene que coincidir userName y password 
 				//Si el type es Relaxed solo userName
@@ -97,6 +96,83 @@ public class UserService {
 	
 	
 	/**
+	 * Metodo para encontrar el UserID y poder hacer un PUT
+	 * @param user usuario cuyo ID quieres averiguar
+	 * @return el ID en la lista de users del usuario pasador por parámetro
+	 */
+	public int userIDinList(User user) throws UserIDNotFoundException {
+		int contador=0;
+		int id=0;
+		for(User u: listaUsuarios) {
+			contador++;
+			if (u.equalsTo(user, "strict")) {
+				
+				id=contador;
+				
+			}
+		}
+		
+		if(contador==0) {
+			throw new UserIDNotFoundException(user);
+		}
+		
+		return id;
+	}
+	
+	/**
+	 * Método para añadir un comentario realizado en la web por un usuario logeado
+	 *
+	 * @param userComent es un pojo intermedio formado por el nombre del usuario y el comentario realizado en la web
+	 * @return el usuario completo con todos los datos + el nuevo coment
+	 */
+	public User setNewComent(UserComent userComent) {
+		
+		User userToSetNewComent= new User(userComent);
+		
+		//Busco el usuario en la memoria de programa
+		User userComplete= this.checkUser(userToSetNewComent, "relaxed");
+		
+		User responseUser=null;
+		
+		try {
+			int id=this.userIDinList(userComplete);
+			
+			//Añado al usuario que esta en la base de datos el nuevo coment
+			
+			userComplete.getComents().add(userComent.getComent());
+			
+			//Hago PUT a la API
+				
+			RestTemplate template= new RestTemplate();
+			HttpMethod metodo= HttpMethod.PUT;
+			
+			HttpHeaders headers= new HttpHeaders();
+			headers.set("Content-Type", "application/json");
+			headers.set("Accept", "application/json");
+			HttpEntity<User> entity= new HttpEntity<>(userComplete, headers);
+			
+			String urlCompleta= usersUrl+"/"+String.valueOf(id);
+			
+			ResponseEntity<User> response= template.exchange(urlCompleta, metodo, entity, User.class);
+			
+			responseUser=response.getBody();
+			
+			//Volvemos a llamar a inicializeUsers para que en la memoria de programa se registre esto
+			this.inicializeUsers();
+			
+		
+			
+		}catch(UserIDNotFoundException uide) {
+			
+			log.warn(uide.getMessage());
+		}
+		
+		return responseUser;
+		
+	}
+	
+	
+	/**
 	 * Metodo para registrar un nuevo usuario en la API
 	 * 
 	 * @param user Recibe un usuario completo para registrarlo
@@ -107,10 +183,9 @@ public class UserService {
 		
 		//Importante: si se quiere registrar alguien y ya hay alguien con ese nombre de usuario no le dejas
 		
-		UserLogin userLoginToRegister= new UserLogin(user);
 		
 		//Comprobamos si ya alguien tiene ese nombre de Usuario
-		User userChecked= this.checkUser(userLoginToRegister, "relaxed");
+		User userChecked= this.checkUser(user, "relaxed");
 		
 		User response=null;
 		
@@ -158,8 +233,9 @@ public class UserService {
 	@PostConstruct
 	public void inicializeUsers() {
 		
-		
+		log.debug("Inicializando lista de usuarios en memoria de programa...");
 		listaUsuarios=this.getAllUsers();
+		log.debug("para poder poner un breakpoint");
 		
 	}
 	

@@ -1,5 +1,7 @@
 package com.myProject.estanco.model;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +17,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserLogin {
 	
+	@NotNull
 	private String userName;
+	
+	@NotNull
 	private String password;
 	
 	public UserLogin(User u) {

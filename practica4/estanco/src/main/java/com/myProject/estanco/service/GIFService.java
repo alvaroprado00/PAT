@@ -1,4 +1,4 @@
-package com.myProject.estanco.model;
+package com.myProject.estanco.service;
 
 import javax.annotation.PostConstruct;
 
@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.myProject.estanco.model.GIF;
 
 import java.util.List;
 

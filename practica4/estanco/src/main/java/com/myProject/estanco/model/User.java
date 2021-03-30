@@ -1,5 +1,8 @@
 package com.myProject.estanco.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,12 +13,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
 	
+	//Dato importante, al indicar un atributo como lista de Objetos(Coments)
+	//Si en el mockapi lo construyes como array de JSON te lo deserializa perfecto
 	
 	private String firstName;
 	private String lastName;
 	private String userName;
 	private String password;
 	private String email;
+	private List<Coment> coments;
 
 	//Al definirnos un constructor se va el que mete por defecto lombok
 	//Hay que indicarle explicitamente que te cree uno con @NoArgsConstructor
@@ -27,6 +33,22 @@ public class User {
 		this.setPassword(userLogin.getPassword());
 		this.setUserName(userLogin.getUserName());
 		this.setEmail("loquesea@gmail.com");
+		ArrayList<Coment> coments= new ArrayList<>();
+		coments.add(new Coment());
+		this.setComents(coments);
+	
+	}
+	
+	public User(UserComent userComent) {
+		
+		this.setFirstName("demo");
+		this.setLastName("demo");
+		this.setPassword("demo");
+		this.setUserName(userComent.getUserName());
+		this.setEmail("loquesea@gmail.com");
+		ArrayList<Coment> coments= new ArrayList<>();
+		coments.add(userComent.getComent());
+		this.setComents(coments);
 	
 	}
 	
