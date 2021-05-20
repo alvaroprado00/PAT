@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login page</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<h1>Log in</h1>
+
+	<form id="formulario">
+		<label for="userName">Introduce tu nombre de usuario</label><br>
+		<input type="text" name="userName" id="userName" required><br>
+		<label for="password">Introduce tu contraseña</label><br>
+		<input type="password" name="password" id="password" required><br>
+		<input type="submit">
+	</form>
+
+
+
+</body>
+<script type="text/javascript">
+	
+	var userToLogIn={};
+
+	const form= document.getElementById("formulario");
+
+	form.addEventListener("submit", function(event){
+		event.preventDefault();
+		let userName= document.getElementById("userName").value;
+		let password=document.getElementById("password").value;
+
+		userToLogIn={userName:userName, password:password};
+
+
+		fetch("http://localHost:8080/api/users/login", {
+			method:"POST",
+			body:JSON.stringify(userToLogIn),
+			headers:{
+				"Content-Type":"application/json",
+				"Accept":"application/json"
+			}
+		})
+		.then(function(response){
+			if(response.ok){
+				return response.json;
+			}else{
+				throw response;
+			}
+		})
+		.then(function(r){
+			console.log(r);
+			localStorage.setItem("activeUser", JSON.stringify(r));
+			alert("Te has logeado");
+			window.location.href="cars.html";
+		})
+		.catch(function(e){
+			console.log(e);
+		})
+
+	})
+</script>
+</html>

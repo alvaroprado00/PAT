@@ -1,0 +1,75 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Resgister page</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<h1>Introduce tu info para registrarte</h1>
+
+	<form id="formulario">
+		<label for="userName">Introduce tu nombre de usuario</label><br>
+		<input type="text" name="userName" id="userName"><br>
+		<label for="password">Introduce tu contraseña</label><br>
+		<input type="password" name="password" id="password"><br>
+		<label for="firstName">Introduce tu nombre</label><br>
+		<input type="text" name="firtName" id="firstName"><br>
+		<label for="lastName">Introduce tu apellido</label><br>
+		<input type="text" name="lastName" id="lastName"><br>
+		<label for="mobilePhone">Introduce tu telefono</label><br>
+		<input type="text" name="mobilePhone" id="mobilePhone"><br>
+		<label for="address">Introduce tu calle</label><br>
+		<input type="text" name="address" id="address"><br><br>
+
+		<input type="submit">
+	</form>
+
+
+
+</body>
+
+<script type="text/javascript">
+
+	var userToSend={};
+	const formulario=document.getElementById("formulario");
+
+	formulario.addEventListener("submit", function(event){
+		event.preventDefault();
+		let userName=document.getElementById("userName").value;
+		let password=document.getElementById("password").value;
+		let firstName=document.getElementById("firstName").value;
+		let lastName=document.getElementById("lastName").value;
+		let mobilePhone=document.getElementById("mobilePhone").value;
+		let address=document.getElementById("address").value;
+
+		userToSend={userName:userName, password:password, firstName:firstName, lastName:lastName, contactInfo:{mobilePhone:mobilePhone, address:address}};
+
+
+		fetch("http://localHost:8080/api/users/register", {
+			method:"POST",
+			body:JSON.stringify(userToSend),
+			headers:{
+				"Content-Type":"application/json",
+				"Accept":"application/json"
+			}
+		})
+		.then(function(response){
+			if(response.ok){
+				return response.json;
+			}else{
+				throw response;
+			}
+		})
+		.then(function(r){
+			console.log(r);
+			alert("Se te ha dado de alta");
+			window.location.href="login.html";
+		})
+		.catch(function(e){
+			console.log(e);
+		})
+	})
+</script>
+</html>

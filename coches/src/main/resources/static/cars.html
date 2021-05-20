@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Resgister page</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<h1>Aqui puedes ver los coches</h1>
+
+	<table id="tabla">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>BRAND</th>
+				<th>MODEL</th>
+			</tr>
+		</thead>
+		<tbody id="tableBody">
+			
+		</tbody>
+	</table>
+</body>
+<script type="text/javascript">
+	
+	var cars=[];
+
+
+	fetch("http://localHost:8080/api/cars", {
+		method:"GET",
+		headers:{
+			"Content-Type":"application/json",
+			"Accept":"application/json"
+		}
+	})
+	.then(function(response){
+		if(response.ok){
+			return response.json;
+		}else{
+			throw response;
+		}
+	})
+	.then(function(r){
+		debugger;
+		cars=r;
+		dinamicContent(cars);
+	})
+	.catch(function(e){
+		console.log(e);
+	})
+	
+
+	function dinamicContent(r){
+
+		let html="";
+		let i;
+
+		for(i=0; i<cars.length; i++){
+			html=html+ '<tr>' +
+					   `<td> ${cars[i].carId}</td>`+
+					   `<td> ${cars[i].brand}</td>`+
+					   `<td> ${cars[i].model}</td>`+
+					   '<tr>';
+		}
+
+		const content= document.getElementById("tableBody");
+		content.innerHTML="";
+		content.innerHTML=html;
+	}
+</script>
+</html>
