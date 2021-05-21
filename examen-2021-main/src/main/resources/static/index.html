@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Estacion de Ski</title>
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
+          integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK"
+          crossorigin="anonymous" />
+
+    <script type="text/javascript">
+
+        var averageTemp;
+        //En javascipt hare uso de fetch para traer la info del back
+
+        fetch("http://localHost:8080/api/temperatures/2021", {
+            method:"GET",
+            headers:{
+                "Content-Type":"application/json",
+                "Accept":"application/json"
+            }
+        })
+        .then(function(response){
+            if(response.ok){
+                return response.json();
+            }else{
+                throw response;
+            }
+        })
+        .then(function(r){
+            //Hago un console log para ver que todo ha ido bien
+            console.log(r);
+            averageTemp=r;
+
+            //LLamo a la funcion para que me muestre el contenido dinamico
+            setDinamicContent();
+        })
+        .catch(function(e){
+            console.log(e);
+        })
+
+        function setDinamicContent(){
+
+            //Haciendo uso de document me traigo la temperatura
+            const p = document.getElementById('averageTemp');
+
+            //Pongo en el parrafo el valor de la temperatura media
+            p.innerHTML=averageTemp;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Bienvenido a la estación de Ski</h1>
+                <div>
+                    <h1>La temperatura media este año es de: </h1>
+                    <p id="averageTemp"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
